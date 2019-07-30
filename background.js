@@ -8,9 +8,22 @@
     };
 
     function initialize(callback) {
+        getFromStorage(function(options) {
+            enforceSettings(options);
+            saveToStorage(options);
+        });
+    }
+
+    function onClick() {
+        getFromStorage(function(options) {
+            options.isMuted = !options.isMuted;
+            enforceSettings(options);
+            saveToStorage(options);
+        });
+    }
+
+    function enforceSettings(options) {
         chrome.tabs.query(queryTabsWithSounds, tabs => {
-            getFromStorage(function(options) {
-                options.isMuted = !options.isMuted;
                 var imagePrefix = options.isMuted ? 'mute' : 'sound';
                 chrome.browserAction.setIcon({
                     path: {
@@ -19,8 +32,6 @@
                     }
                 });
                 options.isMuted ? muteTabs(tabs, options) : unMuteTabs(tabs, options);
-                saveToStorage(options);
-            });
         });
     }
 
@@ -89,7 +100,7 @@
         });
     }
 
-    chrome.browserAction.onClicked.addListener(initialize);
+    chrome.browserAction.onClicked.addListener(onClick);
     chrome.tabs.onUpdated.addListener(onUpdate);
     initialize();
 })();
