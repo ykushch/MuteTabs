@@ -27,11 +27,11 @@
         tabs.forEach(tab => {
             options.mutedTabs.push(tab);
             toggleMuteTab(tab, options.isMuted);
-            chrome.browserAction.setTitle({
-                title: 'Unmute'
-            });
         });
         options.isMuted = false;
+        chrome.browserAction.setTitle({
+            title: 'Unmute'
+        });
     }
 
     function unMuteTabs(tabs, options) {
