@@ -10,9 +10,12 @@
     function initialize(callback) {
         chrome.tabs.query(queryTabsWithSounds, tabs => {
             getFromStorage(function(options) {
-                chrome.runtime.sendMessage({
-                    popupOpen: true,
-                    options: options
+                var imagePrefix = options.isMuted ? 'mute' : 'sound';
+                chrome.browserAction.setIcon({
+                    path: {
+                        '19': 'images/' + imagePrefix + '-19.png',
+                        '38': 'images/' + imagePrefix + '-38.png'
+                    }
                 });
                 muteUnmuteTabs(tabs, options);
                 saveToStorage(options);
@@ -77,19 +80,6 @@
             });
         });
     }
-
-    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-        if (message.popupOpen) {
-            var options = message.options;
-            var imagePrefix = options.isMuted ? 'mute' : 'sound';
-            chrome.browserAction.setIcon({
-                path: {
-                    '19': 'images/' + imagePrefix + '-19.png',
-                    '38': 'images/' + imagePrefix + '-38.png'
-                }
-            });
-        }
-    });
 
     function onUpdate(tabId, changeInfo, tab) {
         getFromStorage(function(options) {
