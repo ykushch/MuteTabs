@@ -10,6 +10,7 @@
     function initialize(callback) {
         chrome.tabs.query(queryTabsWithSounds, tabs => {
             getFromStorage(function(options) {
+                options.isMuted = !options.isMuted;
                 var imagePrefix = options.isMuted ? 'mute' : 'sound';
                 chrome.browserAction.setIcon({
                     path: {
@@ -28,7 +29,6 @@
             options.mutedTabs.push(tab);
             toggleMuteTab(tab, options.isMuted);
         });
-        options.isMuted = false;
         chrome.browserAction.setTitle({
             title: 'Unmute'
         });
@@ -39,7 +39,6 @@
             toggleMuteTab(tab, options.isMuted);
         });
         options.mutedTabs.length = 0;
-        options.isMuted = true;
         chrome.browserAction.setTitle({
             title: 'Mute'
         });
@@ -79,7 +78,7 @@
 
     function onUpdate(tabId, changeInfo, tab) {
         getFromStorage(function(options) {
-            if (options.isMuted) {
+            if (!options.isMuted) {
                 return;
             }
             if (!options.mutedTabs.indexOf(tab) > -1) {
