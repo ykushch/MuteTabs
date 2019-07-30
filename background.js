@@ -17,7 +17,7 @@
                         '38': 'images/' + imagePrefix + '-38.png'
                     }
                 });
-                muteUnmuteTabs(tabs, options);
+                options.isMuted ? muteTabs(tabs, options) : unMuteTabs(tabs, options);
                 saveToStorage(options);
             });
         });
@@ -43,10 +43,6 @@
         chrome.browserAction.setTitle({
             title: 'Mute'
         });
-    }
-
-    function muteUnmuteTabs(tabs, options) {
-        options.isMuted ? muteTabs(tabs, options) : unMuteTabs(tabs, options);
     }
 
     function saveToStorage(objectToSave) {
